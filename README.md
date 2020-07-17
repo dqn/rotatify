@@ -10,7 +10,7 @@ $ go get github.com/dqn/guruguru
 
 ## Usage
 
-`guruguru.Guruguru` includes all `http.Client` properties and methods. Supports HTTP or SOCKS5 protocol for proxy.
+`guruguru.Guruguru` includes all `http.Client` properties and methods. Supports HTTP and SOCKS5 protocol for proxy.
 
 ```go
 package main
@@ -25,7 +25,6 @@ import (
 
 func printIP(g *guruguru.Guruguru) {
   resp, _ := g.Get("https://ifconfig.me")
-  println(resp)
   defer resp.Body.Close()
   b, _ := ioutil.ReadAll(resp.Body)
   fmt.Println(string(b))
@@ -33,15 +32,15 @@ func printIP(g *guruguru.Guruguru) {
 
 func main() {
   g := guruguru.New()
+
   g.UpdateProxies([]string{
-    "http://http.example.com:8080",
-    "socks5://socks5.example.com:7070",
+    "http://XXX.XXX.XXX.XXX:8080",
+    "socks5://YYY.YYY.YYY.YYY:7070",
   })
+  g.RotateInterval = 10 * time.Second
 
   go g.StartRotateProxies()
   defer g.StopRotateProxies()
-
-  g.RotateInterval = 10 * time.Second
 
   printIP(g) // => XXX.XXX.XXX.XXX
   time.Sleep(10 * time.Second)
