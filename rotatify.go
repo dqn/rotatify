@@ -26,12 +26,12 @@ func New() *Rotatify {
 	}
 }
 
-func (g *Rotatify) UpdateProxies(rawURLs []string) error {
-	g.mux.Lock()
-	defer g.mux.Unlock()
+func (r *Rotatify) UpdateProxies(rawURLs []string) error {
+	r.mux.Lock()
+	defer r.mux.Unlock()
 
-	g.proxyIndex = 0
-	g.Proxies = make([]url.URL, 0, len(rawURLs))
+	r.proxyIndex = 0
+	r.Proxies = make([]url.URL, 0, len(rawURLs))
 
 	for _, rawURL := range rawURLs {
 		u, err := url.Parse(rawURL)
@@ -39,40 +39,40 @@ func (g *Rotatify) UpdateProxies(rawURLs []string) error {
 			return err
 		}
 
-		g.Proxies = append(g.Proxies, *u)
+		r.Proxies = append(r.Proxies, *u)
 	}
 
-	g.rotateProxy()
+	r.rotateProxy()
 
 	return nil
 }
 
-func (g *Rotatify) rotateProxy() {
-	if len(g.Proxies) == 0 {
-		g.Transport = nil
+func (r *Rotatify) rotateProxy() {
+	if len(r.Proxies) == 0 {
+		r.Transport = nil
 		return
 	}
 
-	g.Transport = &http.Transport{Proxy: http.ProxyURL(&g.Proxies[g.proxyIndex])}
-	g.proxyIndex = (g.proxyIndex + 1) % len(g.Proxies)
+	r.Transport = &http.Transport{Proxy: http.ProxyURL(&r.Proxies[r.proxyIndex])}
+	r.proxyIndex = (r.proxyIndex + 1) % len(r.Proxies)
 }
 
-func (g *Rotatify) StartRotateProxies() {
-	t := time.NewTicker(g.RotateInterval)
+func (r *Rotatify) StartRotateProxies() {
+	t := time.NewTicker(r.RotateInterval)
 	defer t.Stop()
 
 	for {
 		select {
 		case <-t.C:
-			g.mux.Lock()
-			g.rotateProxy()
-			g.mux.Unlock()
-		case <-g.stopRotateProxiesCh:
+			r.mux.Lock()
+			r.rotateProxy()
+			r.mux.Unlock()
+		case <-r.stopRotateProxiesCh:
 			return
 		}
 	}
 }
 
-func (g *Rotatify) StopRotateProxies() {
-	g.stopRotateProxiesCh <- struct{}{}
+func (r *Rotatify) StopRotateProxies() {
+	r.stopRotateProxiesCh <- struct{}{}
 }
