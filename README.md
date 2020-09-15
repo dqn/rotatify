@@ -23,28 +23,28 @@ import (
   "github.com/dqn/rotatify"
 )
 
-func printIP(g *rotatify.Rotatify) {
-  resp, _ := g.Get("https://ifconfig.me")
+func printIP(r *rotatify.Rotatify) {
+  resp, _ := r.Get("https://ifconfig.me")
   defer resp.Body.Close()
   b, _ := ioutil.ReadAll(resp.Body)
   fmt.Println(string(b))
 }
 
 func main() {
-  g := rotatify.New()
+  r := rotatify.New()
 
-  g.UpdateProxies([]string{
+  r.UpdateProxies([]string{
     "http://XXX.XXX.XXX.XXX:8080",
     "socks5://YYY.YYY.YYY.YYY:7070",
   })
-  g.RotateInterval = 10 * time.Second
+  r.RotateInterval = 10 * time.Second
 
-  go g.StartRotateProxies()
-  defer g.StopRotateProxies()
+  go r.StartRotateProxies()
+  defer r.StopRotateProxies()
 
-  printIP(g) // => XXX.XXX.XXX.XXX
+  printIP(r) // => XXX.XXX.XXX.XXX
   time.Sleep(10 * time.Second)
-  printIP(g) // => YYY.YYY.YYY.YYY
+  printIP(r) // => YYY.YYY.YYY.YYY
 }
 
 ```
