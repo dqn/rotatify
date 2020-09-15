@@ -1,5 +1,7 @@
 # rotatify
 
+[![build status](https://github.com/dqn/rotatify/workflows/build/badge.svg)](https://github.com/dqn/rotatify/actions)
+
 Proxy-Rotatable HTTP(S) client.
 
 ## Installation
