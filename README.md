@@ -1,16 +1,16 @@
-# guruguru
+# rotatify
 
 Proxy-Rotatable HTTP(S) client.
 
 ## Installation
 
 ```bash
-$ go get github.com/dqn/guruguru
+$ go get github.com/dqn/rotatify
 ```
 
 ## Usage
 
-`guruguru.Guruguru` includes all `http.Client` properties and methods. Supports HTTP and SOCKS5 protocol for proxy.
+`rotatify.Rotatify` includes all `http.Client` properties and methods. Supports HTTP and SOCKS5 protocol for proxy.
 
 ```go
 package main
@@ -20,10 +20,10 @@ import (
   "io/ioutil"
   "time"
 
-  "github.com/dqn/guruguru"
+  "github.com/dqn/rotatify"
 )
 
-func printIP(g *guruguru.Guruguru) {
+func printIP(g *rotatify.Rotatify) {
   resp, _ := g.Get("https://ifconfig.me")
   defer resp.Body.Close()
   b, _ := ioutil.ReadAll(resp.Body)
@@ -31,7 +31,7 @@ func printIP(g *guruguru.Guruguru) {
 }
 
 func main() {
-  g := guruguru.New()
+  g := rotatify.New()
 
   g.UpdateProxies([]string{
     "http://XXX.XXX.XXX.XXX:8080",

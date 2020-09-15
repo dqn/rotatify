@@ -1,3 +1,3 @@
-module github.com/dqn/guruguru
+module github.com/dqn/rotatify
 
 go 1.14

@@ -1,4 +1,4 @@
-package guruguru
+package rotatify
 
 import (
 	"net/http"
@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-type Guruguru struct {
+type Rotatify struct {
 	http.Client
 	RotateInterval      time.Duration
 	Proxies             []url.URL
@@ -16,8 +16,8 @@ type Guruguru struct {
 	stopRotateProxiesCh chan struct{}
 }
 
-func New() *Guruguru {
-	return &Guruguru{
+func New() *Rotatify {
+	return &Rotatify{
 		RotateInterval:      10 * time.Minute,
 		Proxies:             make([]url.URL, 0),
 		proxyIndex:          0,
@@ -26,7 +26,7 @@ func New() *Guruguru {
 	}
 }
 
-func (g *Guruguru) UpdateProxies(rawURLs []string) error {
+func (g *Rotatify) UpdateProxies(rawURLs []string) error {
 	g.mux.Lock()
 	defer g.mux.Unlock()
 
@@ -47,7 +47,7 @@ func (g *Guruguru) UpdateProxies(rawURLs []string) error {
 	return nil
 }
 
-func (g *Guruguru) rotateProxy() {
+func (g *Rotatify) rotateProxy() {
 	if len(g.Proxies) == 0 {
 		g.Transport = nil
 		return
@@ -57,7 +57,7 @@ func (g *Guruguru) rotateProxy() {
 	g.proxyIndex = (g.proxyIndex + 1) % len(g.Proxies)
 }
 
-func (g *Guruguru) StartRotateProxies() {
+func (g *Rotatify) StartRotateProxies() {
 	t := time.NewTicker(g.RotateInterval)
 	defer t.Stop()
 
@@ -73,6 +73,6 @@ func (g *Guruguru) StartRotateProxies() {
 	}
 }
 
-func (g *Guruguru) StopRotateProxies() {
+func (g *Rotatify) StopRotateProxies() {
 	g.stopRotateProxiesCh <- struct{}{}
 }

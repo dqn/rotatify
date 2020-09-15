@@ -1,4 +1,4 @@
-package guruguru
+package rotatify
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func getIP(g *Guruguru) (ip string, err error) {
+func getIP(g *Rotatify) (ip string, err error) {
 	resp, err := g.Get("https://httpbin.org/ip")
 	if err != nil {
 		return
@@ -23,7 +23,7 @@ func getIP(g *Guruguru) (ip string, err error) {
 	return
 }
 
-func TestGuruguru(t *testing.T) {
+func TestRotatify(t *testing.T) {
 	g := New()
 	g.UpdateProxies([]string{
 		"http://95.179.165.80:8080",
